@@ -100,7 +100,8 @@ jobs:
         if: ${{ always() }}
 
   notification-failed:
-    if: ${{ failure() }}
+    if: failure()
+    needs: [test, deploy]
     runs-on: ubuntu-latest
     environment: dev
     steps:
