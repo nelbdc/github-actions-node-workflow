@@ -35,7 +35,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
-        continue-on-error: true #le esta diciendo sigue la ejecucion incluso si falla, sera la de build y las siguientes
+        # continue-on-error: true #le esta diciendo sigue la ejecucion incluso si falla, sera la de build y las siguientes
         id: run-test
         run: npm run test
       - name: Upload test report
@@ -88,7 +88,7 @@ jobs:
           echo "launch report"
           echo "${{ toJson(github) }}"
 
-  notification:
+  notification-push:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -98,3 +98,16 @@ jobs:
         with:
           status: ${{ job.status }}
         if: ${{ always() }}
+
+  notification-failed:
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://github.com/rtCamp.png?size=48
+        with:
+          status: ${{ job.status }}
