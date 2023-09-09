@@ -43,6 +43,19 @@ jobs:
         with:
           name: test-report
           path: test.json
+      - uses: ravsamhq/notify-slack-action@v2
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notification_title: "{workflow} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          footer: "Linked Repo <{repo_url}|{repo}>"
+          notify_when: "failure"
+          mention_users: "U05M5KJ6HNZ"
+          mention_groups: "C05RR231GHJ"
+          mention_users_when: "failure,warnings"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -105,11 +118,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
+      # - uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+      #     SLACK_ICON: https://github.com/rtCamp.png?size=48
 
       - uses: ravsamhq/notify-slack-action@v2
         if: always()
