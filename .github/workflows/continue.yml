@@ -90,6 +90,7 @@ jobs:
 
   notification:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: iRoachie/slack-github-actions@v2.3.2
         env:
