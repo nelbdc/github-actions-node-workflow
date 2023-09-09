@@ -87,3 +87,13 @@ jobs:
         run: |
           echo "launch report"
           echo "${{ toJson(github) }}"
+
+  notification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: iRoachie/slack-github-actions@v2.3.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+        if: ${{ always() }}

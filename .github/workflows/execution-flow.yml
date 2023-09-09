@@ -1,8 +1,8 @@
-name: Website Deployment
+name: Website Deployment execution
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   lint:
     runs-on: ubuntu-latest
