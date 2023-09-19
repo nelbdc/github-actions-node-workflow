@@ -1,8 +1,21 @@
 name: Reusable workflow
-on: workflow_call # para decirle que va hacer llamado desde otro workflow
+on:
+  workflow_call: # para decirle que va hacer llamado desde otro workflow
+    inputs:
+      artifact-name:
+        description: The name of the deployable artifact files
+        required: true
+        type: string
+        default: dist
 jobs:
   reusabe:
     runs-on: ubuntu-latest
     steps:
+      - name: Get code artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact-name }}
+      - name: List my files
+        run: ls -l
       - name: output information
         run: echo "Deploying & uploading ..."
