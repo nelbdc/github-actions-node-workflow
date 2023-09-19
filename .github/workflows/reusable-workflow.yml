@@ -70,6 +70,8 @@ jobs:
   deploy: # para hacer los workflow reusables se hace una llamada directamente al workflow que queremos utilizar
     needs: build
     uses: ./.github/workflows/reusable.yml
+    with:
+      artifact-name: dist-files
   reports:
     needs: [deploy, lint]
     if: failure()
