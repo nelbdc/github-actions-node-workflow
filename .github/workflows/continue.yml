@@ -44,16 +44,18 @@ jobs:
         with:
           name: test-report
           path: test.json
-      - uses: ravsamhq/notify-slack-action@v2
+      - name: slack notification
+        uses: ravsamhq/notify-slack-action@v2
         if: always()
         with:
           status: ${{ job.status }}
           notification_title: "{workflow} has {status_message}"
+          token: ${{ secrets.GITHUB_TOKEN }}
           message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
           footer: "Linked Repo <{repo_url}|{repo}>"
           notify_when: "failure"
-          mention_users: "U05M5KJ6HNZ"
-          mention_groups: "C05RR231GHJ"
+          # mention_users: "U05M5KJ6HNZ"
+          # mention_groups: "C05RR231GHJ"
           mention_users_when: "failure,warnings"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -105,13 +107,14 @@ jobs:
   notification-push:
     runs-on: ubuntu-latest
     environment: dev
+    if: always()
     steps:
       - uses: iRoachie/slack-github-actions@v2.3.2
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           status: ${{ job.status }}
-        if: ${{ always() }}
 
   notification-failed:
     if: failure()
