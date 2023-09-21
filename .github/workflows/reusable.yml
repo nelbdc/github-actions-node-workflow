@@ -10,8 +10,14 @@ on:
     secrets:
       some-secret:
         required: true
+    outputs:
+      resulst:
+        description: The resulst of the deploy operation
+        value: ${{ jobs.reusabe.outputs.outcome }}
 jobs:
   reusabe:
+    outputs:
+      outcome: ${{ steps.step-resulst.outputs.steps-result }}
     runs-on: ubuntu-latest
     steps:
       - name: Get code artifact
@@ -24,3 +30,6 @@ jobs:
         run: echo "Deploying & uploading ..."
       - name: Get value of secret
         run: echo ${{ secrets.some-secret }}
+      - name: Set result output
+        id: step-resulst
+        run: echo "steps-result=success" >> $GITHUB_OUTPUT
